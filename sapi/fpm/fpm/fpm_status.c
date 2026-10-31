@@ -720,56 +720,69 @@ static void fpm_status_handle_openmetrics(struct fpm_scoreboard_s *scoreboard_p,
 	spprintf(&buffer, 0,
 		"# TYPE phpfpm_up gauge\n"
 		"# HELP phpfpm_up Could pool %s using a %s PM on PHP-FPM be reached?\n"
-		"phpfpm_up 1\n"
+		"phpfpm_up{pool=\"%s\"} 1\n"
 		"# TYPE phpfpm_start_since counter\n"
 		"# HELP phpfpm_start_since The number of seconds since FPM has started.\n"
-		"phpfpm_start_since %lu\n"
+		"phpfpm_start_since{pool=\"%s\"} %lu\n"
 		"# TYPE phpfpm_accepted_connections counter\n"
 		"# HELP phpfpm_accepted_connections The number of requests accepted by the pool.\n"
-		"phpfpm_accepted_connections %lu\n"
+		"phpfpm_accepted_connections{pool=\"%s\"} %lu\n"
 		"# TYPE phpfpm_listen_queue gauge\n"
 		"# HELP phpfpm_listen_queue The number of requests in the queue of pending connections.\n"
-		"phpfpm_listen_queue %d\n"
+		"phpfpm_listen_queue{pool=\"%s\"} %d\n"
 		"# TYPE phpfpm_max_listen_queue counter\n"
 		"# HELP phpfpm_max_listen_queue The maximum number of requests in the queue of pending connections since FPM has started.\n"
-		"phpfpm_max_listen_queue %d\n"
+		"phpfpm_max_listen_queue{pool=\"%s\"} %d\n"
 		"# TYPE phpfpm_listen_queue_length gauge\n"
 		"# HELP phpfpm_listen_queue_length The size of the socket queue of pending connections.\n"
-		"phpfpm_listen_queue_length %u\n"
+		"phpfpm_listen_queue_length{pool=\"%s\"} %u\n"
 		"# TYPE phpfpm_idle_processes gauge\n"
 		"# HELP phpfpm_idle_processes The number of idle processes.\n"
-		"phpfpm_idle_processes %d\n"
+		"phpfpm_idle_processes{pool=\"%s\"} %d\n"
 		"# TYPE phpfpm_active_processes gauge\n"
 		"# HELP phpfpm_active_processes The number of active processes.\n"
-		"phpfpm_active_processes %d\n"
+		"phpfpm_active_processes{pool=\"%s\"} %d\n"
 		"# TYPE phpfpm_total_processes gauge\n"
 		"# HELP phpfpm_total_processes The number of idle + active processes.\n"
-		"phpfpm_total_processes %d\n"
+		"phpfpm_total_processes{pool=\"%s\"} %d\n"
 		"# TYPE phpfpm_max_active_processes counter\n"
 		"# HELP phpfpm_max_active_processes The maximum number of active processes since FPM has started.\n"
-		"phpfpm_max_active_processes %d\n"
+		"phpfpm_max_active_processes{pool=\"%s\"} %d\n"
 		"# TYPE phpfpm_max_children_reached counter\n"
 		"# HELP phpfpm_max_children_reached The number of times, the process limit has been reached, when pm tries to start more children (works only for pm 'dynamic' and 'ondemand').\n"
-		"phpfpm_max_children_reached %u\n"
+		"phpfpm_max_children_reached{pool=\"%s\"} %u\n"
 		"# TYPE phpfpm_slow_requests counter\n"
 		"# HELP phpfpm_slow_requests The number of requests that exceeded your 'request_slowlog_timeout' value.\n"
-		"phpfpm_slow_requests %lu\n"
+		"phpfpm_slow_requests{pool=\"%s\"} %lu\n"
 		"# TYPE phpfpm_memory_peak gauge\n"
 		"# HELP phpfpm_memory_peak The memory usage peak since FPM has started.\n"
-		"phpfpm_memory_peak %zu\n",
+		"phpfpm_memory_peak{pool=\"%s\"} %zu\n",
 		scoreboard_p->pool,
 		PM2STR(scoreboard_p->pm),
+		scoreboard_p->pool,
+		scoreboard_p->pool,
 		(unsigned long) (now_epoch - scoreboard_p->start_epoch),
+		scoreboard_p->pool,
 		scoreboard_p->requests,
+		scoreboard_p->pool,
 		scoreboard_p->lq,
+		scoreboard_p->pool,
 		scoreboard_p->lq_max,
+		scoreboard_p->pool,
 		scoreboard_p->lq_len,
+		scoreboard_p->pool,
 		scoreboard_p->idle,
+		scoreboard_p->pool,
 		scoreboard_p->active,
+		scoreboard_p->pool,
 		scoreboard_p->idle + scoreboard_p->active,
+		scoreboard_p->pool,
 		scoreboard_p->active_max,
+		scoreboard_p->pool,
 		scoreboard_p->max_children_reached,
+		scoreboard_p->pool,
 		scoreboard_p->slow_rq,
+		scoreboard_p->pool,
 		scoreboard_p->memory_peak);
 
 	PUTS(buffer);
